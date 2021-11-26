@@ -24,6 +24,7 @@ DROP TABLE IF EXISTS `films`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `films` (
   `movie_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `movie_type` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `image_url` varchar(255) DEFAULT NULL,
   `director` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `actor` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,

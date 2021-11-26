@@ -67,6 +67,9 @@ def parse_page(html):
             'rel': 'v:starring'})
         actors = [actor.text for actor in actors_html]
         actor = " ".join(actors)
+        type_html = text_con.find_all('span', {'property': 'v:genre'})
+        movie_types = [movie_type.text for movie_type in type_html]
+        movie_type = " ".join(movie_types)
         director = text_con.find('span').find('span', {'class': 'attrs'}).find('a', {'rel': 'v:directedBy'}).text  # 导演
         description = lxml_data.find('div', {'class': 'related-info'}).find('div', {'class': 'indent'}).find('span', {
             'property': 'v:summary'}).text.replace('\n', '')  # 简介
@@ -83,9 +86,9 @@ def parse_page(html):
         return
 
     # 储存进数据库
-    sql = r"insert into films (movie_name, image_url, director, actor, description, ratingValue, picture)  " \
-          "values ('%s', '%s', '%s', '%s', '%s', '%s', '%s');" \
-          % (movie_name, image_url, director, actor, description, ratingValue, picture_name)
+    sql = r"insert into films (movie_name,movie_type,image_url, director, actor, description, ratingValue, picture)  " \
+          "values ('%s','%s','%s', '%s', '%s', '%s', '%s', '%s');" \
+          % (movie_name, movie_type,image_url, director, actor, description, ratingValue, picture_name)
     try:
         cur.execute(sql)
         connect_obj.commit()
