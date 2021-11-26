@@ -88,16 +88,18 @@ def parse_page(html):
     # 储存进数据库
     sql = r"insert into films (movie_name,movie_type,image_url, director, actor, description, ratingValue, picture)  " \
           "values ('%s','%s','%s', '%s', '%s', '%s', '%s', '%s');" \
-          % (movie_name, movie_type,image_url, director, actor, description, ratingValue, picture_name)
+          % (movie_name.replace("'", "\\'"),
+             movie_type, image_url, director, actor,
+             description.replace("'", "\\'"),
+             ratingValue, picture_name)
     try:
         cur.execute(sql)
         connect_obj.commit()
+        print("insert movie: " + movie_name)
     except Exception as e:
         print(e)
         print(sql)
         connect_obj.rollback()
-    print("insert movie: " + movie_name)
-    # print(movie_name, image_url, director, actor, description, ratingValue)
 
 
 def run(url, headers):
@@ -125,20 +127,31 @@ def run(url, headers):
 if __name__ == '__main__':
     # 构建所有url
     urls_queue = Queue(120)
-    # base_url = r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E5%8A%A8%E7%94%BB&sort=recommend&page_limit=20&page_start="
     url_List = [
-        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%BB%8F%E5%85%B8&sort=recommend&page_limit=20&page_start=",   # 经典
-        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E5%8D%8E%E8%AF%AD&sort=recommend&page_limit=20&page_start=",   # 华语
-        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E6%AC%A7%E7%BE%8E&sort=recommend&page_limit=20&page_start=",   # 欧美
-        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E9%9F%A9%E5%9B%BD&sort=recommend&page_limit=20&page_start=",   # 韩国
-        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E6%97%A5%E6%9C%AC&sort=recommend&page_limit=20&page_start=",   # 日本
-        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E5%8A%A8%E4%BD%9C&sort=recommend&page_limit=20&page_start=",   # 动作
-        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E5%96%9C%E5%89%A7&sort=recommend&page_limit=20&page_start=",   # 喜剧
-        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%88%B1%E6%83%85&sort=recommend&page_limit=20&page_start=",   # 爱情
-        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%A7%91%E5%B9%BB&sort=recommend&page_limit=20&page_start=",   # 科幻
-        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E6%82%AC%E7%96%91&sort=recommend&page_limit=20&page_start=",   # 悬疑
-        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E6%81%90%E6%80%96&sort=recommend&page_limit=20&page_start=",   # 恐怖
-        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E5%8A%A8%E7%94%BB&sort=recommend&page_limit=20&page_start=",   # 动画
+        # 经典
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%BB%8F%E5%85%B8&sort=recommend&page_limit=20&page_start=",
+        # 华语
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E5%8D%8E%E8%AF%AD&sort=recommend&page_limit=20&page_start=",
+        # 欧美
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E6%AC%A7%E7%BE%8E&sort=recommend&page_limit=20&page_start=",
+        # 韩国
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E9%9F%A9%E5%9B%BD&sort=recommend&page_limit=20&page_start=",
+        # 日本
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E6%97%A5%E6%9C%AC&sort=recommend&page_limit=20&page_start=",
+        # 动作
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E5%8A%A8%E4%BD%9C&sort=recommend&page_limit=20&page_start=",
+        # 喜剧
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E5%96%9C%E5%89%A7&sort=recommend&page_limit=20&page_start=",
+        # 爱情
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%88%B1%E6%83%85&sort=recommend&page_limit=20&page_start=",
+        # 科幻
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%A7%91%E5%B9%BB&sort=recommend&page_limit=20&page_start=",
+        # 悬疑
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E6%82%AC%E7%96%91&sort=recommend&page_limit=20&page_start=",
+        # 恐怖
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E6%81%90%E6%80%96&sort=recommend&page_limit=20&page_start=",
+        # 动画
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E5%8A%A8%E7%94%BB&sort=recommend&page_limit=20&page_start=",
     ]
     page_num = 25
 
