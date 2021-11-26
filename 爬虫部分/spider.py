@@ -9,6 +9,8 @@ import urllib
 from bs4 import BeautifulSoup
 import json
 import pymysql
+import time
+import random
 import re
 
 Headers = {
@@ -92,3 +94,25 @@ def parse_page(html):
         connect_obj.rollback()
     print("insert movie: " + movie_name)
     # print(movie_name, image_url, director, actor, description, ratingValue)
+
+
+def run(url, headers):
+    """
+    启动爬虫程序
+
+    :param url: 网页链接
+    :param headers: 请求头
+    :return: None
+    """
+    try:
+        htmls = get_html(url, headers)
+        for html in htmls:
+            try:
+                parse_page(html)
+                time.sleep(random.randint(5, 10))
+            except Exception as e:
+                print(e)
+                time.sleep(random.randint(5, 10))
+    except Exception as e:
+        print(e)
+        time.sleep(random.randint(15, 30))
