@@ -9,6 +9,7 @@ import urllib
 from bs4 import BeautifulSoup
 import json
 import pymysql
+from queue import Queue
 import time
 import random
 import re
@@ -116,3 +117,36 @@ def run(url, headers):
     except Exception as e:
         print(e)
         time.sleep(random.randint(15, 30))
+
+
+if __name__ == '__main__':
+    # 构建所有url
+    urls_queue = Queue(120)
+    # base_url = r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E5%8A%A8%E7%94%BB&sort=recommend&page_limit=20&page_start="
+    url_List = [
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%BB%8F%E5%85%B8&sort=recommend&page_limit=20&page_start=",   # 经典
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E5%8D%8E%E8%AF%AD&sort=recommend&page_limit=20&page_start=",   # 华语
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E6%AC%A7%E7%BE%8E&sort=recommend&page_limit=20&page_start=",   # 欧美
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E9%9F%A9%E5%9B%BD&sort=recommend&page_limit=20&page_start=",   # 韩国
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E6%97%A5%E6%9C%AC&sort=recommend&page_limit=20&page_start=",   # 日本
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E5%8A%A8%E4%BD%9C&sort=recommend&page_limit=20&page_start=",   # 动作
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E5%96%9C%E5%89%A7&sort=recommend&page_limit=20&page_start=",   # 喜剧
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%88%B1%E6%83%85&sort=recommend&page_limit=20&page_start=",   # 爱情
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%A7%91%E5%B9%BB&sort=recommend&page_limit=20&page_start=",   # 科幻
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E6%82%AC%E7%96%91&sort=recommend&page_limit=20&page_start=",   # 悬疑
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E6%81%90%E6%80%96&sort=recommend&page_limit=20&page_start=",   # 恐怖
+        r"https://movie.douban.com/j/search_subjects?type=movie&tag=%E5%8A%A8%E7%94%BB&sort=recommend&page_limit=20&page_start=",   # 动画
+    ]
+    page_num = 25
+
+    for base_url in url_List:
+        for i in range(0, page_num):
+            url_i = base_url + str(i * 20)
+            urls_queue.put(url_i)
+
+        while not urls_queue.empty():
+            run(urls_queue.get(), Headers)
+            time.sleep(random.randint(120, 240))
+
+    # 关闭数据库连接
+    connect_obj.close()
